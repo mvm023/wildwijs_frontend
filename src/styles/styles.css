@@ -1,7 +1,6 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    margin: 20px;
     background-color: #ecffe0;
     display: grid;
 }
@@ -174,114 +173,6 @@ body {
     padding: 0px 20px; /* Optional: Add padding to the sides */
 }
 
-/* Topbar styling */
-#topbar {
-    width: 100%;
-    height: 60px; /* Adjust as needed */
-    background-color: white;
-    display: flex;
-    justify-content: center; /* This is to center the container */
-    align-items: center;
-    position: fixed;
-    padding: 10px 0px;
-    top: 0;
-    left: 0;
-    z-index: 1000; /* Ensures it's on top of other elements */
-}
-
-/* Topbar styling */
-#topbar .container {
-    display: flex;
-    justify-content: space-between; /* Keeps space between logo and nav menu on larger screens */
-    align-items: center;
-    width: 100%;
-}
-
-/* Ensure the logo doesn't push the hamburger icon to the right */
-#topbar #logo {
-    width: 40px; /* Adjust logo size */
-    height: auto;
-    flex-grow: 0; /* Prevent the logo from growing and pushing the icon */
-}
-
-/* Nav menu styling */
-#topbar .navMenu {
-    display: flex;
-    gap: 20px; /* Add space between the nav links */
-}
-
-#topbar .navMenu button {
-    text-decoration: none;
-    color: #333; /* Adjust link color */
-    font-size: 16px; /* Adjust font size */
-    background:none;
-    border:none;
-    margin:0;
-    padding:0;
-    cursor: pointer;
-}
-
-#topbar .navMenu button:hover {
-    color: #007bff; /* Optional: Change color on hover */
-}
-
-/* Hide nav menu on mobile and show hamburger icon */
-#topbar .nav-menu {
-    display: flex;
-}
-
-/* Hamburger icon styling */
-#hamburger-icon {
-    display: none; /* Hidden by default */
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    margin-left: auto; /* Ensures the hamburger icon stays aligned to the right */
-}
-#hamburger-icon span {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background-color: #333;
-    border-radius: 5px;
-}
-
-/* Mobile view */
-@media (max-width: 768px) {
-    /* Hide the nav menu on mobile */
-    #topbar .nav-menu {
-        display: none;
-    }
-
-    /* Show the hamburger icon */
-    #hamburger-icon {
-        display: flex;
-    }
-
-    /* Align the topbar content for mobile */
-    #topbar .container {
-        justify-content: flex-start; /* Align logo and hamburger icon properly */
-    }
-
-    /* When the menu is active (expanded) */
-    #topbar .nav-menu.active {
-        display: flex;
-        flex-direction: column;
-        gap: 10px; /* Space out the links */
-        position: absolute;
-        top: 60px; /* Place it below the topbar */
-        left: 0;
-        width: 100%;
-        background-color: white; /* Ensure the background matches the topbar */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
-    }
-
-    #topbar .nav-menu a {
-        text-align: center;
-        padding: 10px 0; /* Add padding to the links */
-        width: 100%;
-    }
-}
 
 .study_mode_content {
     text-align: center;

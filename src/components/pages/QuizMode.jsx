@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/styles.css";
 import Quiz from '../Quiz/Quiz';
 import QuizSelection from '../QuizSelection';
@@ -55,6 +55,9 @@ const QuizMode = () => {
   const [lives, setLives] = useState(3);
   const [loading, setLoading] = useState(false);
 
+  // Reset the quiz when the component is initialized
+  useEffect(() => { setAnimalData([]); }, []);
+
   const startQuiz = async (animalClass, occurrenceStatusType) => {
     setLoading(true);
     try {
@@ -95,7 +98,7 @@ const QuizMode = () => {
 
   return (
     <div>
-      <div className="container" style={{ marginTop: "90px" }}>
+      <div className="container">
         {!loading && !animalData.length ? <QuizSelection startQuiz={startQuiz} quizzes={quizzes}/> : null}
         {loading && <LoadingSpinner />}
         {animalData.length > 0 && <ScoreAndLives score={score} lives={lives} totalQuestions={animalData.length} />}
