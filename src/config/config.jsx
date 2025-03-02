@@ -1,5 +1,8 @@
-const API_BASE_URL = window.location.hostname === "localhost"
-  ? "http://127.0.0.1:8000"
-  : "https://wildwijs-backend.onrender.com";
+const isDevelopment = import.meta.env.MODE === 'development'
+console.log(isDevelopment)
+console.log(import.meta.env.MODE)
+const API_BASE_URL = isDevelopment
+  ? import.meta.env.VITE_API_BASE_URL_LOCAL
+  : import.meta.env.VITE_API_BASE_URL_DEPLOY
 
 export default API_BASE_URL;
