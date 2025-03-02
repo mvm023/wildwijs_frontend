@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../../styles/styles.css";
-import Quiz from './Quiz';
+import Quiz from '../Quiz/Quiz';
 import QuizSelection from '../QuizSelection';
 import API_BASE_URL from "../../config/config";
 
@@ -30,7 +30,7 @@ const ScoreAndLives = ({ score, totalQuestions }) => {
 };
 
 
-const App = () => {
+const StudyMode = () => {
   const [animalData, setAnimalData] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -97,4 +97,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default StudyMode;
