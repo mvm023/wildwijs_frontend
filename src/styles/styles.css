@@ -3,6 +3,7 @@ body {
     text-align: center;
     margin: 20px;
     background-color: #ecffe0;
+    display: grid;
 }
 
 .disabled {
