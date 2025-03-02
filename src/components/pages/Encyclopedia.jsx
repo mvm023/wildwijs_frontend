@@ -1,6 +1,21 @@
-import React from 'react'
+import {React, useState, useEffect}  from 'react'
+import AxiosInstance from '../../config/axios'
 
-function Encyclopedia() {
+const Encyclopedia = () => {
+  const [organism, setOrganism] = useState([])
+
+  console.log(organism)
+
+  const GetData = () => {
+    AxiosInstance.get('organism/').then((res) => {
+      setOrganism(res.data)
+    })
+  }
+
+  useEffect(() =>  {
+      GetData()
+  }, [])
+
   return (
     <div>
         Hier komt al die info
