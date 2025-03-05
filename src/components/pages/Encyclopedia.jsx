@@ -1,74 +1,64 @@
-import {React, useState, useEffect}  from 'react'
-import AxiosInstance from '../../config/axios'
-import { TextField, Button, Typography, Card, CardContent } from '@mui/material'
+import { React, useState, useEffect } from "react";
+import AxiosInstance from "../../config/axios";
+import { TextField, Autocomplete, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
+import API_BASE_URL from "../../config/config";
 
 const Encyclopedia = () => {
-  const [organisms, setOrganisms] = useState([])  // Store all organisms
-  const [searchTerm, setSearchTerm] = useState('')  // Store search input
-  const [filteredOrganism, setFilteredOrganism] = useState(null)  // Store filtered organism
+  const [organisms, setOrganisms] = useState([]); // Store all organisms
+  const [filteredOrganism, setFilteredOrganism] = useState(null); // Store selected organism
 
   // Get the data from the backend
   const GetData = () => {
-    AxiosInstance.get('organism/').then((res) => {
-      setOrganisms(res.data)
-      setFilteredOrganism(res.data[0])  // Set the first bird as the initial display
-    })
-  }
-
-  // Filter organisms based on the search term
-  const handleSearch = () => {
-    const result = organisms.filter(org => 
-      org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      org.scientific_name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    setFilteredOrganism(result.length > 0 ? result[0] : null) // Show first match or nothing if not found
-  }
+    AxiosInstance.get("organism/").then((res) => {
+      setOrganisms(res.data);
+      setFilteredOrganism(res.data[0]); // Set the first organism as default
+    });
+  };
 
   // On initial render, get the data
   useEffect(() => {
-    GetData()
-  }, [])
+    GetData();
+  }, []);
 
   return (
-    <div>
-      <TextField 
-        label="Search Bird" 
-        variant="outlined" 
-        value={searchTerm} 
-        onChange={(e) => setSearchTerm(e.target.value)} 
-        fullWidth
-      />
-      <Button variant="contained" color="primary" onClick={handleSearch}>
-        Search
-      </Button>
+    <Grid container spacing={2} sx={{ backgroundColor: "#ffff", padding: "30px" }}>
+    <Grid size={12}>
+    <Autocomplete
+      disablePortal
+      options={organisms}
+      getOptionLabel={(option) => option.name} // Extract the name field
+      sx={{ width: "100%" }}
+      value={filteredOrganism} // Bind state to selected value
+      onChange={(event, newValue) => setFilteredOrganism(newValue)} // Update state on selection
+      renderInput={(params) => <TextField {...params} label="Vind een soort" />}
+    />
+  </Grid>
 
-      {filteredOrganism ? (
-        <Card sx={{ maxWidth: 345, marginTop: 2 }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              {filteredOrganism.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Scientific Name: {filteredOrganism.scientific_name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Alternative Names: {filteredOrganism.alternative_names?.length > 0 ? filteredOrganism.alternative_names.join(', ') : 'N/A'}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Description: {filteredOrganism.description || 'No description available'}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Occurrence Status: {filteredOrganism.occurrence_status_verbatim || 'N/A'}
-            </Typography>
-          </CardContent>
-        </Card>
-      ) : (
-        <Typography variant="h6" color="text.secondary" sx={{ marginTop: 2 }}>
-          No bird found with that name.
+  {/* Flex container for text & image */}
+  {filteredOrganism && (
+    <Grid size={12} sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+      {/* Text on the left */}
+      <div style={{ flex: 1, textAlign: "left" }}>
+        <Typography sx={{ fontWeight: "bold" }}>
+          {filteredOrganism.name}{" "}
+          <span style={{ color: "gray" }}>({filteredOrganism.scientific_name})</span>
         </Typography>
-      )}
-    </div>
-  )
-}
 
-export default Encyclopedia
+        <Typography sx={{ marginTop: "8px" }} dangerouslySetInnerHTML={{ __html: filteredOrganism.description }} />
+      </div>
+
+      {/* Image on the right */}
+      <img
+        style={{ width: "250px", height: "250px", objectFit: "cover", marginLeft: "20px" }}
+        src={`${API_BASE_URL}/media/images/thumbnails/birds_both.jpg`}
+        alt={filteredOrganism.name}
+      />
+    </Grid>
+  )}
+</Grid>
+
+  );
+};
+
+export default Encyclopedia;
