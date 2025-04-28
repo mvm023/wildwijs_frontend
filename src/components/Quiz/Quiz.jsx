@@ -57,7 +57,7 @@ const Quiz = ({ animalData, currentQuestionIndex, checkAnswer, exitQuiz, mode })
   return (
     <div className="quiz-container">
       <div className="question-container">
-        <img src={`${API_BASE_URL}${image}`} alt="Animal" className="question-image" />
+        <img src={image} alt="Animal" className="question-image" />
         <ul className="options">
           {answers.map((answer, index) => (
             <li
