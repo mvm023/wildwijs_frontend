@@ -15,7 +15,6 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
 const pages = [
-  { name: 'Quiz', path: '/QuizMode' },
   { name: 'Studeren', path: '/StudyMode' },
   { name: 'Encyclopedie', path: '/Encyclopedia' }
 ];

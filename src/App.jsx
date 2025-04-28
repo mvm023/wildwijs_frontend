@@ -14,7 +14,6 @@ function App() {
       <TopBar/>
       <Routes>
         <Route path="" element={<Home/>}/>
-        <Route path="/QuizMode" element={<QuizMode/>}/>
         <Route path="/StudyMode" element={<StudyMode/>}/>
         <Route path="/Encyclopedia" element={<Encyclopedia/>}/>
       </Routes>
