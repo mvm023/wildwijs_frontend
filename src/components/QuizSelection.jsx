@@ -11,10 +11,10 @@ const QuizSelection = ({ startQuiz, quizzes }) => {
             <div
               key={index}
               className="quiz-option"
-              onClick={() => startQuiz(quiz.className, quiz.type)}
+              onClick={() => startQuiz(quiz.id)}
             >
-              <img src={`${API_BASE_URL}/media/images/thumbnails/${quiz.img}`} alt={quiz.title} />
-              <p>{quiz.title}</p>
+              <img src={quiz.image_url} alt={quiz.name} />
+              <p>{quiz.name}</p>
             </div>
           ))}
         </div>

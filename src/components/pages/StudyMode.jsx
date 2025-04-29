@@ -3,10 +3,8 @@ import "../../styles/styles.css";
 import Quiz from '../Quiz/Quiz';
 import QuizSelection from '../QuizSelection';
 import API_BASE_URL from "../../config/config";
+import AxiosInstance from "../../config/axios";
 
-  const quizzes = [
-    { className: "Aves", type: "birdsOfPrey", title: "Roofvogels", img: "birds_of_prey.jpg" },
-  ];
 
 const LoadingSpinner = () => (
   <div id="loadingSpinner" className="spinner-container">
@@ -31,18 +29,36 @@ const ScoreAndLives = ({ score, totalQuestions }) => {
 
 
 const StudyMode = () => {
+  const [quizzes, setQuizzes] = useState([]);
   const [animalData, setAnimalData] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [score, setScore] = useState(0);
+
+  // Get quizzes from the backend using Axios
+  const GetQuizzes = () => {
+    AxiosInstance.get("quizzes/")  // Use the correct endpoint for quizzes
+      .then((res) => {
+        setQuizzes(res.data);      // Set quizzes to state
+        setLoading(false);         // Stop loading once data is fetched
+      })
+      .catch((error) => {
+        console.error("Error fetching quizzes:", error);
+        setLoading(false);         // Stop loading even if there is an error
+      });
+  };
+
+  useEffect(() => {
+    GetQuizzes();  // Fetch quizzes on component mount
+  }, []);
   
   // Reset the quiz when the component is initialized
     useEffect(() => { setAnimalData([]); }, []);
 
-  const startQuiz = async (animalClass, type) => {
+  const startQuiz = async (quiz_id) => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/getAnimalData/${animalClass}/${type}/50`);
+      const response = await fetch(`${API_BASE_URL}/getQuizData/${quiz_id}`);
       const data = await response.json();
       console.log(data);
       setAnimalData(data);
