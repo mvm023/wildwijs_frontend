@@ -10,6 +10,7 @@ const SignupForm = ({ onClose }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
   const [error, setError] = useState('');
 
   const isLongEnough = password.length >= 8;
@@ -17,8 +18,9 @@ const SignupForm = ({ onClose }) => {
   const hasUppercase = /[A-Z]/.test(password);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
   const isPasswordValid = isLongEnough && hasNumber && hasUppercase && hasSpecialChar;
+  const passwordsAgree = isPasswordValid && password == repeatPassword;
 
-  const canSubmit = username && email && isPasswordValid;
+  const canSubmit = username && email && isPasswordValid && passwordsAgree;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -83,10 +85,19 @@ const SignupForm = ({ onClose }) => {
         required
         fullWidth
       />
+      <TextField
+        label="Herhaal wachtwoord"
+        type="password"
+        value={repeatPassword}
+        onChange={(e) => setRepeatPassword(e.target.value)}
+        required
+        fullWidth
+      />
       {renderCondition("Minstens 8 karakters", isLongEnough)}
       {renderCondition("Minstens 1 getal", hasNumber)}
       {renderCondition("Minstens 1 hoofdletter", hasUppercase)}
       {renderCondition("Minstens 1 speciaal karakter", hasSpecialChar)}
+      {renderCondition("Wachtwoorden komen overeen", passwordsAgree)}
       {error && <Typography color="error">{error}</Typography>}
       <Button type="submit" variant="contained" disabled={!canSubmit}>
         Aanmelden
