@@ -2,8 +2,6 @@ import React from "react";
 
 const QuizSelection = ({ startQuiz, quizzes }) => {
   // Group quizzes by layer level
-  console.log(quizzes); // Check if level data is coming through
-
   const groupedByLayer = quizzes.reduce((acc, quiz) => {
     const layerKey = `Niveau ${quiz.layer.level}`;
     if (!acc[layerKey]) acc[layerKey] = [];
@@ -11,10 +9,17 @@ const QuizSelection = ({ startQuiz, quizzes }) => {
     return acc;
   }, {});
 
+  // Sort the layer groups by level (ascending order)
+  const sortedLayers = Object.entries(groupedByLayer).sort((a, b) => {
+    const levelA = parseInt(a[0].split(" ")[1], 10); // Extract the level number
+    const levelB = parseInt(b[0].split(" ")[1], 10); // Extract the level number
+    return levelA - levelB; // Compare and sort in ascending order
+  });
+
   return (
     <div id="quizSelection">
       <h2>Selecteer een quiz</h2>
-      {Object.entries(groupedByLayer).map(([layerName, layerQuizzes]) => (
+      {sortedLayers.map(([layerName, layerQuizzes]) => (
         <div key={layerName} className="quiz-layer-group">
           <h3>{layerName}</h3>
           <div className="quiz-options">
