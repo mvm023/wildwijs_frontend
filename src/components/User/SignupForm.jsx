@@ -75,7 +75,7 @@ const SignupForm = ({ onClose }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
       <TextField
         label="Gebruikersnaam"
         value={username}

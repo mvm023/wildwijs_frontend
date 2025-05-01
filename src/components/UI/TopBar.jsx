@@ -217,7 +217,17 @@ function ResponsiveAppBar() {
       </Container>
 
       {/* Login Dialog */}
-      <Dialog open={showLoginDialog} onClose={handleCloseLoginDialog}>
+      <Dialog open={showLoginDialog} 
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            handleCloseSignupDialog();
+          }
+        }}
+        slotProps={{
+          paper: {
+            sx: { width: '100%', maxWidth: 500 }, // Adjust as needed
+          },
+        }}>
       <DialogTitle sx={{ m: 0, p: 2 }}>
           Inloggen
           <IconButton
@@ -239,7 +249,17 @@ function ResponsiveAppBar() {
       </Dialog>
 
       {/* Signup Dialog */}
-      <Dialog open={showSignupDialog} onClose={handleCloseSignupDialog}>
+      <Dialog open={showSignupDialog} 
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            handleCloseSignupDialog();
+          }
+        }}
+        slotProps={{
+          paper: {
+            sx: { width: '100%', maxWidth: 500 }, // Adjust as needed
+          },
+        }}>
         <DialogTitle sx={{ m: 0, p: 2 }}>
           Account aanmaken
           <IconButton
