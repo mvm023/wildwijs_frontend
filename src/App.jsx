@@ -14,7 +14,7 @@ function App() {
     <>
       <TopBar/>
       <Routes>
-        <Route path="" element={<Home/>}/>
+        <Route path="/" element={<Home/>}/>
         <Route path="/StudyMode" element={<StudyMode/>}/>
         <Route path="/Encyclopedia" element={<Encyclopedia/>}/>
         <Route path="/activate-account/:uidb64/:token" element={<EmailConfirmation />} />
