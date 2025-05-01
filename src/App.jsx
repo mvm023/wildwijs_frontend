@@ -6,6 +6,7 @@ import QuizMode from './components/pages/QuizMode';
 import StudyMode from './components/pages/StudyMode';
 import TopBar from './components/UI/TopBar';
 import Encyclopedia from './components/pages/Encyclopedia';
+import EmailConfirmation from './components/pages/EmailConfirmation';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="" element={<Home/>}/>
         <Route path="/StudyMode" element={<StudyMode/>}/>
         <Route path="/Encyclopedia" element={<Encyclopedia/>}/>
+        <Route path="/activate-account/:uidb64/:token" element={<EmailConfirmation />} />
       </Routes>
     </>
   )
