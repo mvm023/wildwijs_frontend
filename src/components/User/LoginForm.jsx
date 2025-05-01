@@ -6,10 +6,14 @@ const LoginForm = ({ onClose, setUser, onSwitchToSignup}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isBusy, setIsBusy] = useState(false)
+  
 
-  const canSubmit = username && password
+  const canSubmit = username && password && !isBusy;
 
   const handleSubmit = async (event) => {
+    setIsBusy(true);
+
     event.preventDefault();
 
     if (!username || !password) {
@@ -36,6 +40,10 @@ const LoginForm = ({ onClose, setUser, onSwitchToSignup}) => {
       }
     } catch (error) {
       setError('An error occurred. Please try again.');
+    }
+    finally
+    {
+      setIsBusy(false);
     }
   };
 

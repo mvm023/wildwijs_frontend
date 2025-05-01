@@ -12,6 +12,8 @@ const SignupForm = ({ onClose }) => {
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [isBusy, setIsBusy] = useState(false)
 
   const isLongEnough = password.length >= 8;
   const hasNumber = /\d/.test(password);
@@ -20,9 +22,11 @@ const SignupForm = ({ onClose }) => {
   const isPasswordValid = isLongEnough && hasNumber && hasUppercase && hasSpecialChar;
   const passwordsAgree = isPasswordValid && password == repeatPassword;
 
-  const canSubmit = username && email && isPasswordValid && passwordsAgree;
+  const canSubmit = username && email && isPasswordValid && passwordsAgree && !isBusy;
 
   const handleSubmit = async (event) => {
+    setIsBusy(true);
+
     event.preventDefault();
     if (!canSubmit) {
       setError('Vul alle velden in en kies een sterk wachtwoord.');
@@ -38,9 +42,8 @@ const SignupForm = ({ onClose }) => {
 
       if (response.ok) {
         const data = await response.json();
-        alert(data.message);
         setError('');
-        onClose(); // close dialog on success
+        setSuccess(true);
       } else {
         const data = await response.json();
         setError(data.message || 'Aanmelding mislukt.');
@@ -48,6 +51,9 @@ const SignupForm = ({ onClose }) => {
     } catch (error) {
       console.log(error);
       setError('Er is een fout opgetreden. Probeer het opnieuw.');
+    }
+    finally{
+      setIsBusy(false);
     }
   };
 
@@ -58,6 +64,15 @@ const SignupForm = ({ onClose }) => {
       <Typography color={valid ? 'green' : 'error'} fontSize="0.9rem">{label}</Typography>
     </Box>
   );
+
+  if (success) {
+    return (
+      <Typography sx={{ mt: 2 }}>
+        Bevestig je e-mailadres om je account te activeren. 
+        Controleer je inbox (en eventueel je spamfolder).
+      </Typography>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
