@@ -18,7 +18,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-
+import CloseIcon from '@mui/icons-material/Close';
+import API_BASE_URL from '../../config/config';
 
 
 
@@ -83,12 +84,11 @@ function ResponsiveAppBar() {
           'Content-Type': 'application/json',
         },
       });
+      localStorage.removeItem('user');
+      setUser(null);
     } catch (error) {
       console.error('Logout failed:', error);
     }
-  
-    localStorage.removeItem('user');
-    setUser(null);
   };
 
   React.useEffect(() => {
@@ -219,28 +219,47 @@ function ResponsiveAppBar() {
 
       {/* Login Dialog */}
       <Dialog open={showLoginDialog} onClose={handleCloseLoginDialog}>
-        <DialogTitle>Log in</DialogTitle>
+      <DialogTitle sx={{ m: 0, p: 2 }}>
+          Inloggen
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseLoginDialog}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
-          <LoginForm ref={loginFormRef} onClose={handleCloseLoginDialog} onSwitchToSignup={handleSwitchToSignup} setUser={setUser} />        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseLoginDialog}>Annuleren</Button>
-          <Button onClick={handleLoginClick} variant="contained">
-            Log in
-          </Button>
-        </DialogActions>
+          <LoginForm onClose={handleCloseLoginDialog} onSwitchToSignup={handleSwitchToSignup} setUser={setUser} />        
+        </DialogContent>
       </Dialog>
 
       {/* Signup Dialog */}
       <Dialog open={showSignupDialog} onClose={handleCloseSignupDialog}>
-        <DialogTitle>Account aanmaken</DialogTitle>
+        <DialogTitle sx={{ m: 0, p: 2 }}>
+          Account aanmaken
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseSignupDialog}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
         <DialogContent>
-          <SignupForm ref={signupFormRef} onClose={handleCloseSignupDialog} setUser={setUser} />        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseSignupDialog}>Annuleren</Button>
-          <Button onClick={handleSignupClick} variant="contained">
-            Aanmelden
-          </Button>
-        </DialogActions>
+          <SignupForm onClose={handleCloseSignupDialog} />
+        </DialogContent>
       </Dialog>
 
 

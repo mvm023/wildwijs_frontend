@@ -1,13 +1,13 @@
 import API_BASE_URL from "../../config/config";
-import React, { useState, useRef } from 'react';
-import { TextField, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { TextField, Typography, Button } from '@mui/material';
 
-const LoginForm = React.forwardRef(({ onClose, setUser, onSwitchToSignup}, ref) => {
+const LoginForm = ({ onClose, setUser, onSwitchToSignup}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const formRef = useRef();
+  const canSubmit = username && password
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,12 +39,9 @@ const LoginForm = React.forwardRef(({ onClose, setUser, onSwitchToSignup}, ref) 
     }
   };
 
-  React.useImperativeHandle(ref, () => ({
-    submit: () => formRef.current.requestSubmit()
-  }));
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <TextField
             label="Gebruikersnaam"
             value={username}
@@ -69,8 +66,11 @@ const LoginForm = React.forwardRef(({ onClose, setUser, onSwitchToSignup}, ref) 
             >
             Nog geen account? Meld je aan
         </Typography>
+        <Button type="submit" variant="contained" disabled={!canSubmit}>
+              Inloggen
+        </Button>
     </form>
   );
-});
+};
 
 export default LoginForm;
