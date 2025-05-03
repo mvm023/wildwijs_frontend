@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { shuffleArray } from "../../utils/utils";
 import API_BASE_URL from "../../config/config";
 
-const Quiz = ({ animalData, currentQuestionIndex, checkAnswer, exitQuiz, mode }) => {
+const Quiz = ({ quizSessionId, questions, currentQuestionIndex, handleAnswer, exitQuiz, mode }) => {
   // For both modes, we track disabled answers and the flash effect.
   const [disabledAnswers, setDisabledAnswers] = useState([]);
   const [flashedAnswer, setFlashedAnswer] = useState(null);
@@ -16,41 +16,51 @@ const Quiz = ({ animalData, currentQuestionIndex, checkAnswer, exitQuiz, mode })
     setFlashedAnswer(null);
     setAttemptCount(0);
     setShuffleKey(prev => prev + 1);
-  }, [currentQuestionIndex,animalData]);
+  }, [currentQuestionIndex,questions]);
 
-  const { name, image, wrongAnswers } = animalData[currentQuestionIndex];
+  const { image, options, question_id } = questions[currentQuestionIndex];
 
   // Shuffle answers (same for both modes)
   const answers = useMemo(() => {
-    return shuffleArray([name, ...wrongAnswers]);
-  }, [name, wrongAnswers, shuffleKey]);
+    return shuffleArray(options);  // options contains both correct and wrong answers
+  }, [options, shuffleKey]);
 
-  const handleAnswerClick = (answer) => {
-    if (disabledAnswers.includes(answer)) return; // Already clicked
-
-    if (answer === name) {
-      // Correct answer chosen.
+  const handleAnswerClick = async (answer) => {
+    if (disabledAnswers.includes(answer)) return;
+    console.log(`Alright you clicked on answer ${answer}`);
+  
+    // Send answer to backend to check correctness
+    const response = await fetch(`${API_BASE_URL}/answerQuestion/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        quiz_session_id: quizSessionId,
+        question_id: question_id,
+        selected: answer,
+      }),
+      credentials: "include",
+    });
+  
+    const data = await response.json();
+  
+    if (data.correct) {
       setFlashedAnswer(answer);
       setTimeout(() => {
         setFlashedAnswer(null);
         if (mode === "study") {
-          // Pass the attempt count (plus one since we start at 0) to the parent.
-          checkAnswer(answer, attemptCount + 1);
+          handleAnswer(attemptCount + 1); // Pass attempt count in study mode
           setAttemptCount(0);
-        } else {
-          // In quiz mode, simply proceed as before.
-          checkAnswer(answer);
+        } 
+        else {
+          handleAnswer(answer); // Proceed with quiz mode logic
         }
       }, 500);
-    } else {
-      // Wrong answer.
-      // Increase attempt count (only matters in study mode)
+    } 
+    else {
       setAttemptCount(prev => prev + 1);
-      // Disable the wrong answer so it can't be clicked again in this attempt.
       setDisabledAnswers(prev => [...prev, answer]);
-      if (mode === "quiz") {
-        checkAnswer(answer);
-      }
     }
   };
 
