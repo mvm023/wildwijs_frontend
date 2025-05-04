@@ -76,7 +76,7 @@ const StudyMode = () => {
       .then((res) => {
         setQuizzes(res.data);
         localStorage.setItem('quizzes', JSON.stringify(res.data));
-        localStorage.setItem('currentSubcategoryId', JSON.stringify(subcategoryId))
+        localStorage.setItem('currentSubcategoryId', subcategoryId)
         setLoading(false);
       })
       .catch((error) => {
@@ -110,6 +110,7 @@ const StudyMode = () => {
     setLoading(true);
     try {
       await AxiosInstance.post(`endQuiz/${currentQuizId}/`, {});
+      const currentSubcategoryId = localStorage.getItem('currentSubcategoryId')
       await GetQuizzes(currentSubcategoryId);
     } catch (error) {
       console.error("Error ending quiz:", error);
