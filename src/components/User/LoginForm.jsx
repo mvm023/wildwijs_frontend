@@ -1,5 +1,6 @@
-import API_BASE_URL from "../../config/config";
+import AxiosInstance from '../../config/axios'
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router'
 import { TextField, Typography, Button } from '@mui/material';
 
 const LoginForm = ({ onClose, setUser, onSwitchToSignup}) => {
@@ -7,45 +8,41 @@ const LoginForm = ({ onClose, setUser, onSwitchToSignup}) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isBusy, setIsBusy] = useState(false)
-  
+  const navigate = useNavigate()
+
 
   const canSubmit = username && password && !isBusy;
 
   const handleSubmit = async (event) => {
-    setIsBusy(true);
-
+    
     event.preventDefault();
-
+    setIsBusy(true);
+  
     if (!username || !password) {
       setError('Both fields are required.');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/login/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (response.ok) {
-            const userData = await response.json();
-            localStorage.setItem('user', JSON.stringify(userData));
-            setUser(userData);
-            onClose();
-        }
-       else {
-        const data = await response.json();
-        setError(data.message || 'Login failed.');
-      }
-    } catch (error) {
-      setError('An error occurred. Please try again.');
-    }
-    finally
-    {
       setIsBusy(false);
+      return;
+    } 
+
+    AxiosInstance.post(`login/`,{
+      username: username,
+      password: password,
+    })
+    .then((response) => {
+      console.log(response);
+      setUser(response.data.user);
+      localStorage.setItem('Token', response.data.token);
+      onClose();
+
+      // Force page reload after login
+      window.location.reload();
     }
+    )
+    .catch((error) => {
+      console.error("Error during login", error)
+    })
   };
+  
 
 
   return (

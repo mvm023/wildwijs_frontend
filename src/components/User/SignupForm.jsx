@@ -1,4 +1,4 @@
-import API_BASE_URL from "../../config/config";
+import AxiosInstance from '../../config/axios'
 import React, { useState } from 'react';
 import { TextField, Typography, Button, Box } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -33,28 +33,14 @@ const SignupForm = ({ onClose }) => {
       return;
     }
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/register/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setError('');
-        setSuccess(true);
-      } else {
-        const data = await response.json();
-        setError(data.message || 'Aanmelding mislukt.');
-      }
-    } catch (error) {
-      console.log(error);
-      setError('Er is een fout opgetreden. Probeer het opnieuw.');
-    }
-    finally{
-      setIsBusy(false);
-    }
+    AxiosInstance.post(`register`, {
+      email: email,
+      username: username,
+      password: password,
+    })
+    .catch((error) => {
+      console.error("Error during registration", error);
+    })
   };
 
 

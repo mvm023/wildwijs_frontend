@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { shuffleArray } from "../../utils/utils";
 import API_BASE_URL from "../../config/config";
 
-const Quiz = ({ quizSessionId, questions, currentQuestionIndex, handleAnswer, exitQuiz, mode }) => {
+const Quiz = ({ quizSessionId, questions, currentQuestionIndex, handleAnswer, exitQuiz, mode, quizId }) => {
   // For both modes, we track disabled answers and the flash effect.
   const [disabledAnswers, setDisabledAnswers] = useState([]);
   const [flashedAnswer, setFlashedAnswer] = useState(null);
@@ -25,6 +25,7 @@ const Quiz = ({ quizSessionId, questions, currentQuestionIndex, handleAnswer, ex
     return shuffleArray(options);  // options contains both correct and wrong answers
   }, [options, shuffleKey]);
 
+
   const handleAnswerClick = async (answer) => {
     if (disabledAnswers.includes(answer)) return;
     console.log(`Alright you clicked on answer ${answer}`);
@@ -33,7 +34,7 @@ const Quiz = ({ quizSessionId, questions, currentQuestionIndex, handleAnswer, ex
     const response = await fetch(`${API_BASE_URL}/answerQuestion/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         quiz_session_id: quizSessionId,
@@ -50,11 +51,11 @@ const Quiz = ({ quizSessionId, questions, currentQuestionIndex, handleAnswer, ex
       setTimeout(() => {
         setFlashedAnswer(null);
         if (mode === "study") {
-          handleAnswer(attemptCount + 1); // Pass attempt count in study mode
+          handleAnswer(attemptCount + 1, quizId); // Pass attempt count in study mode
           setAttemptCount(0);
         } 
         else {
-          handleAnswer(answer); // Proceed with quiz mode logic
+          handleAnswer(answer, quizId); // Proceed with quiz mode logic
         }
       }, 500);
     } 

@@ -19,25 +19,24 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import CloseIcon from '@mui/icons-material/Close';
 import API_BASE_URL from '../../config/config';
+import AxiosInstance from '../../config/axios';
 
 
 
 const pages = [
   { name: 'Studeren', path: '/StudyMode' },
-  { name: 'Encyclopedie', path: '/Encyclopedia' }
+  // { name: 'Encyclopedie', path: '/Encyclopedia' }
 ];
 
 const settings = ['Uitloggen'];
 
 
-function ResponsiveAppBar() {
-  const [user, setUser] = React.useState(null);
+function ResponsiveAppBar({ user, setUser }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [showLoginDialog, setShowLoginDialog] = React.useState(false);
   const [showSignupDialog, setShowSignupDialog] = React.useState(false);
-  const loginFormRef = React.useRef();
-  const signupFormRef = React.useRef();
+
 
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
@@ -63,40 +62,24 @@ function ResponsiveAppBar() {
     handleOpenSignupDialog();
   };
 
-  const handleLoginClick = () => {
-    loginFormRef.current?.submit(); // Triggers the form submission
-  };
-
-  const handleSignupClick = () => {
-    signupFormRef.current?.submit(); // Triggers the form submission
-  };
-
   const handleLogOutClick = async () => {
-    const userData = JSON.parse(localStorage.getItem('user'));
-    const token = userData?.token;
-  
-    try {
-      await fetch(`${API_BASE_URL}/logout/`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Token ${token}`, 
-          'Content-Type': 'application/json',
-        },
-      });
-      localStorage.removeItem('user');
-      setUser(null);
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+    AxiosInstance.post(`logout/`, {
+    })
+    .then(
+      () => {
+        setUser(null);
+        localStorage.removeItem("Token");
+        // Force page reload after login
+      window.location.reload();
+  })
+    .catch((error) => {
+      console.error("Error during logout", error);
+    })
   };
-
-  React.useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
   
+  React.useEffect(() => {
+    console.log('User state updated:', user);
+  }, [user])
 
   return (
     <AppBar position="static">

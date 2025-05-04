@@ -1,9 +1,10 @@
 import React from "react";
+import { LinearProgress, Box } from "@mui/material";
 
 const QuizSelection = ({ startQuiz, quizzes }) => {
   // Group quizzes by layer level
   const groupedByLayer = quizzes.reduce((acc, quiz) => {
-    const layerKey = `Niveau ${quiz.layer.level}`;
+    const layerKey = `Niveau ${quiz.layer.level + 1}`;
     if (!acc[layerKey]) acc[layerKey] = [];
     acc[layerKey].push(quiz);
     return acc;
@@ -26,10 +27,22 @@ const QuizSelection = ({ startQuiz, quizzes }) => {
             {layerQuizzes.map((quiz) => (
               <div
                 key={quiz.id}
-                className="quiz-option"
-                onClick={() => startQuiz(quiz.id)}
+                className={`quiz-option ${quiz.is_unlocked ? "unlocked" : "locked"}`}
+                onClick={() => quiz.is_unlocked && startQuiz(quiz.id)}
               >
                 <img src={quiz.image_url} alt={quiz.name} />
+                <Box sx={{ width: '100%', marginBottom: 1 }}>
+                  <LinearProgress
+                    variant="determinate"
+                    value={Math.min((quiz.completed_attempts / quiz.required_attempts), 1) * 100}
+                    sx={{
+                      height: 8,
+                      borderRadius: 5,
+                      backgroundColor: "lightgray",
+                      "& .MuiLinearProgress-bar": "green",
+                    }}
+                  />
+                </Box>
                 <p>{quiz.name}</p>
               </div>
             ))}

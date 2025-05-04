@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .env
+
+#For local https
+localhost-key.pem
+localhost.pem
