@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/styles.css";
 import Quiz from '../Quiz/Quiz';
-import QuizSelection from '../QuizSelection';
+import QuizSelection from '../Quiz/QuizSelection';
 import API_BASE_URL from "../../config/config";
 
   const quizzes = [
