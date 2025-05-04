@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/styles.css";
 import Quiz from '../Quiz/Quiz';
-import QuizSelection from '../QuizSelection';
-import API_BASE_URL from "../../config/config";
+import QuizSelection from '../Quiz/QuizSelection';
 import AxiosInstance from "../../config/axios";
+import SubcategorySelection from "../Quiz/SubcategorySelection";
+import CategorySelection from "../Quiz/CategorySelection";
 
 
 const LoadingSpinner = () => (
@@ -29,6 +30,8 @@ const ScoreAndLives = ({ score, totalQuestions }) => {
 
 
 const StudyMode = () => {
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [quizSessionId, setQuizSessionId] = useState(null);
@@ -37,82 +40,106 @@ const StudyMode = () => {
   const [loading, setLoading] = useState(false);
   const [score, setScore] = useState(0);
 
-  // Get quizzes from the backend using Axios
-  const GetQuizzes = () => {
-    AxiosInstance.get("quizzes/")  // Use the correct endpoint for quizzes
+  // Fetch Categories from the API
+  const GetCategories = () => {
+    setLoading(true);
+    AxiosInstance.get("categories/")
       .then((res) => {
-        setQuizzes(res.data);      // Set quizzes to state
-        setLoading(false);         // Stop loading once data is fetched
+        setCategories(res.data);
+        setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching quizzes:", error);
-        setLoading(false);         // Stop loading even if there is an error
+        console.error("Error fetching categories:", error);
+        setLoading(false);
       });
   };
 
-  useEffect(() => {
-    GetQuizzes();  // Fetch quizzes on component mount
-  }, []);
-  
-  // Reset the quiz when the component is initialized
-    useEffect(() => { setQuestions([]); }, []);
-
-    const startQuiz = async (quiz_id) => {
-      setLoading(true);
-      AxiosInstance.get(`startQuiz/${quiz_id}/`,{}
-      ).then((response) => {
-        const data = response.data
-        console.log(data);
-        setCurrentQuizId(quiz_id);
-        setQuestions(data.questions);
-        setQuizSessionId(data.quiz_session_id);
-        setCurrentQuestionIndex(0);
-        setScore(0);
-      }).catch((error) => {
-        console.error("Error during login", error)
+  // Fetch Subcategories based on selected category
+  const GetSubcategories = (categoryId) => {
+    setLoading(true);
+    AxiosInstance.get(`subcategories/${categoryId}/`)
+      .then((res) => {
+        setSubcategories(res.data);
+        localStorage.setItem('subcategories', JSON.stringify(res.data));
+        setLoading(false);
       })
-      setLoading(false);
-    };
+      .catch((error) => {
+        console.error("Error fetching subcategories:", error);
+        setLoading(false);
+      });
+  };
+
+  // Fetch Quizzes based on selected layer
+  const GetQuizzes = (subcategoryId) => {
+    setLoading(true);
+    AxiosInstance.get(`quizzes-by-subcategory/${subcategoryId}/`)
+      .then((res) => {
+        setQuizzes(res.data);
+        localStorage.setItem('quizzes', JSON.stringify(res.data));
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching quizzes:", error);
+        setLoading(false);
+      });
+  };
+
+  const startQuiz = async (quiz_id) => {
+    setLoading(true);
+    AxiosInstance.get(`startQuiz/${quiz_id}/`,{}
+    ).then((response) => {
+      const data = response.data
+      console.log(data);
+      setCurrentQuizId(quiz_id);
+      setQuestions(data.questions);
+      setQuizSessionId(data.quiz_session_id);
+      setCurrentQuestionIndex(0);
+      setScore(0);
+    }).catch((error) => {
+      console.error("Error during login", error)
+    })
+    setLoading(false);
+  };
     
-    const endQuiz = async () => {
-      if (!currentQuizId) {
-        console.warn("No quiz ID found when trying to end quiz.");
+  const endQuiz = async () => {
+    if (!currentQuizId) {
+      console.warn("No quiz ID found when trying to end quiz.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await AxiosInstance.post(`endQuiz/${currentQuizId}/`, {});
+      await GetQuizzes();
+    } catch (error) {
+      console.error("Error ending quiz:", error);
+    }
+    setLoading(false);
+  };
+
+  const handleAnswer = (attemptCount, quiz_id) => {
+    console.log("Checking answer in StudyMode");
+    setScore(score + 1);
+    if (attemptCount === 1){
+      const newQuestions = questions.filter((_, index) => index !== currentQuestionIndex);
+      if (newQuestions.length === 0 ){
+        endQuiz(quiz_id);
+        exitQuiz();
         return;
       }
-      setLoading(true);
-      try {
-        await AxiosInstance.post(`endQuiz/${currentQuizId}/`, {});
-        await GetQuizzes();
-      } catch (error) {
-        console.error("Error ending quiz:", error);
-      }
-      setLoading(false);
-    };
+      setQuestions(newQuestions)
+    }
+    else{
+      setQuestions(prev => {
+        const newIndex = Math.min(currentQuestionIndex + 5, prev.length - 1); // Move forward 5 spots or to the end
+        const updatedArray = [...prev]; // Copy the array
+        const [movedItem] = updatedArray.splice(currentQuestionIndex, 1); // Remove the current item
+        updatedArray.splice(newIndex, 0, movedItem); // Insert it at the new position
+        return updatedArray;
+      });
+    }
 
-    const handleAnswer = (attemptCount, quiz_id) => {
-      console.log("Checking answer in StudyMode");
-      setScore(score + 1);
-      if (attemptCount === 1){
-        const newQuestions = questions.filter((_, index) => index !== currentQuestionIndex);
-        if (newQuestions.length === 0 ){
-          endQuiz(quiz_id);
-          exitQuiz();
-          return;
-        }
-        setQuestions(newQuestions)
-      }
-      else{
-        setQuestions(prev => {
-          const newIndex = Math.min(currentQuestionIndex + 5, prev.length - 1); // Move forward 5 spots or to the end
-          const updatedArray = [...prev]; // Copy the array
-          const [movedItem] = updatedArray.splice(currentQuestionIndex, 1); // Remove the current item
-          updatedArray.splice(newIndex, 0, movedItem); // Insert it at the new position
-          return updatedArray;
-        });
-      }
-
-      // Move to the next question (or wrap around if needed)
-      setCurrentQuestionIndex(prev => (prev >= questions.length - 1 ? 0 : prev));
+    // Move to the next question (or wrap around if needed)
+    setCurrentQuestionIndex(prev => (prev >= questions.length - 1 ? 0 : prev));
 
    };
     
@@ -121,14 +148,47 @@ const StudyMode = () => {
     setQuestions([]);
   };
 
+  // Load categories on component mount
+  useEffect(() => {
+    // Load categories from localStorage if available
+    GetCategories()
+    const savedSubcategories = JSON.parse(localStorage.getItem('subcategories'));
+    if (savedSubcategories) {
+      setSubcategories(savedSubcategories);
+    }
+    const savedQuizzes = JSON.parse(localStorage.getItem('quizzes'));
+    if (savedQuizzes) {
+      setQuizzes(savedQuizzes);
+    }
+  
+    // Clear questions to avoid persistence
+    setQuestions([]);
+  }, []);
+  
   return (
     <div>
       <div className="container">
-        {!loading && !questions.length ? <QuizSelection startQuiz={startQuiz} quizzes={quizzes} /> : null}
+        {!loading && !questions.length && !subcategories.length && categories.length > 0 && (
+          <CategorySelection categories={categories} GetSubcategories={GetSubcategories}/>
+        )}
+
+        {!loading && !questions.length && !quizzes.length && subcategories.length > 0 && (
+          <SubcategorySelection subcategories={subcategories} goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories');}} GetQuizzes={GetQuizzes} />
+        )}
+
+
+        {!loading && !questions.length && quizzes.length > 0 && (
+            <QuizSelection startQuiz={startQuiz} quizzes={quizzes} goBack={() => {setQuizzes([]); localStorage.removeItem('quizzes');}} />
+        )}
+
         {loading && <LoadingSpinner />}
-        {questions.length > 0 && <ScoreAndLives score={score} totalQuestions={questions.length} />}
-        {questions.length > 0 && <Quiz quizSessionId={quizSessionId} questions={questions} currentQuestionIndex={currentQuestionIndex} handleAnswer={handleAnswer} exitQuiz={exitQuiz} mode="study"/>}
-      </div>
+        {questions.length > 0 && (
+          <div>
+             <ScoreAndLives score={score} totalQuestions={questions.length} />
+             <Quiz quizSessionId={quizSessionId} questions={questions} currentQuestionIndex={currentQuestionIndex} handleAnswer={handleAnswer} exitQuiz={exitQuiz} mode="study"/>
+          </div>
+        )}
+       </div>
     </div>
   );
 };

@@ -67,6 +67,7 @@ const Quiz = ({ quizSessionId, questions, currentQuestionIndex, handleAnswer, ex
 
   return (
     <div className="quiz-container">
+      
       <div className="question-container">
         <img src={image} alt="Animal" className="question-image" />
         <ul className="options">
