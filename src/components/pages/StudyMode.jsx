@@ -76,6 +76,7 @@ const StudyMode = () => {
       .then((res) => {
         setQuizzes(res.data);
         localStorage.setItem('quizzes', JSON.stringify(res.data));
+        localStorage.setItem('currentSubcategoryId', JSON.stringify(subcategoryId))
         setLoading(false);
       })
       .catch((error) => {
@@ -109,7 +110,7 @@ const StudyMode = () => {
     setLoading(true);
     try {
       await AxiosInstance.post(`endQuiz/${currentQuizId}/`, {});
-      await GetQuizzes();
+      await GetQuizzes(currentSubcategoryId);
     } catch (error) {
       console.error("Error ending quiz:", error);
     }
@@ -156,9 +157,9 @@ const StudyMode = () => {
     if (savedSubcategories) {
       setSubcategories(savedSubcategories);
     }
-    const savedQuizzes = JSON.parse(localStorage.getItem('quizzes'));
-    if (savedQuizzes) {
-      setQuizzes(savedQuizzes);
+    const currentSubcategoryId = JSON.parse(localStorage.getItem('currentSubcategoryId'));
+    if (currentSubcategoryId){
+      GetQuizzes(currentSubcategoryId)
     }
   
     // Clear questions to avoid persistence
@@ -173,7 +174,7 @@ const StudyMode = () => {
         )}
 
         {!loading && !questions.length && !quizzes.length && subcategories.length > 0 && (
-          <SubcategorySelection subcategories={subcategories} goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories');}} GetQuizzes={GetQuizzes} />
+          <SubcategorySelection subcategories={subcategories} goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories'); localStorage.removeItem('currentSubcategoryId')}} GetQuizzes={GetQuizzes} />
         )}
 
 
