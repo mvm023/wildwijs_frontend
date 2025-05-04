@@ -70,9 +70,21 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.quiz-option.locked img {
+    filter: grayscale(100%); /* Apply grayscale and darken image for locked quizzes */
+    pointer-events: none; /* Prevent interaction with image if locked */
+}
+
+.quiz-option.locked {
+    cursor: not-allowed; /* Change the cursor to indicate the quiz is locked */
+}
 
 .quiz-option:hover {
     transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.quiz-option.locked:hover {
+    transform: none; /* Disable hover effect */
 }
 
 .score-and-lives {

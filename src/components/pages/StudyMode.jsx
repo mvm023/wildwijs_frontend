@@ -33,6 +33,7 @@ const StudyMode = () => {
   const [questions, setQuestions] = useState([]);
   const [quizSessionId, setQuizSessionId] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuizId, setCurrentQuizId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [score, setScore] = useState(0);
 
@@ -58,30 +59,43 @@ const StudyMode = () => {
 
     const startQuiz = async (quiz_id) => {
       setLoading(true);
-      try {
-        const response = await fetch(`${API_BASE_URL}/startQuiz/${quiz_id}/`,{
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await response.json();
+      AxiosInstance.get(`startQuiz/${quiz_id}/`,{}
+      ).then((response) => {
+        const data = response.data
         console.log(data);
+        setCurrentQuizId(quiz_id);
         setQuestions(data.questions);
         setQuizSessionId(data.quiz_session_id);
         setCurrentQuestionIndex(0);
         setScore(0);
-      } catch (error) {
-        console.error("Error starting quiz:", error);
-      }
+      }).catch((error) => {
+        console.error("Error during login", error)
+      })
       setLoading(false);
     };
     
+    const endQuiz = async () => {
+      if (!currentQuizId) {
+        console.warn("No quiz ID found when trying to end quiz.");
+        return;
+      }
+      setLoading(true);
+      try {
+        await AxiosInstance.post(`endQuiz/${currentQuizId}/`, {});
+        await GetQuizzes();
+      } catch (error) {
+        console.error("Error ending quiz:", error);
+      }
+      setLoading(false);
+    };
 
-    const handleAnswer = (attemptCount) => {
+    const handleAnswer = (attemptCount, quiz_id) => {
       console.log("Checking answer in StudyMode");
       setScore(score + 1);
       if (attemptCount === 1){
         const newQuestions = questions.filter((_, index) => index !== currentQuestionIndex);
         if (newQuestions.length === 0 ){
+          endQuiz(quiz_id);
           exitQuiz();
           return;
         }

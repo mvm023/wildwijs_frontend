@@ -51,7 +51,7 @@ const Encyclopedia = () => {
       {/* Image on the right */}
       <img
         style={{ width: "250px", height: "250px", objectFit: "cover", marginLeft: "20px" }}
-        src={`${API_BASE_URL}/media/images/thumbnails/birds_both.jpg`}
+        src={`${filteredOrganism.image_url}`}
         alt={filteredOrganism.name}
       />
     </Grid>

@@ -1,6 +1,4 @@
 const isDevelopment = import.meta.env.MODE === 'development'
-console.log(isDevelopment)
-console.log(import.meta.env.MODE)
 const API_BASE_URL = isDevelopment
   ? import.meta.env.VITE_API_BASE_URL_LOCAL
   : import.meta.env.VITE_API_BASE_URL_DEPLOY
