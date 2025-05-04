@@ -9,16 +9,17 @@ import {
 
 const CategorySelection = ({ categories, GetSubcategories }) => {
   return (
-    <div style={{ marginTop: 50 }}>
+    <div style={{ marginTop: 20 }}>
       <Box display="flex" flexDirection="column" alignItems="center" gap={2} mt={2}>
         {categories.map((category) => {
           const { completed, total } = category.completion_progress || {};
 
           return (
-            <Card key={category.id} sx={{ width: 1140, maxWidth: "100%" }}>
+            <Card key={category.id} sx={{ width: "100%" }}>
               <CardActionArea onClick={() => GetSubcategories(category.id)}>
-                <Box sx={{ display: "flex", position: "relative", height: 200 }}>
-                  <Box sx={{ width: "75%" }}>
+                <Box sx={{ display: "flex", height: 200, width: "100%" }}>
+                  {/* Left side: CardMedia and Typography centered within 75% */}
+                  <Box sx={{ width: "75%", position: "relative" }}>
                     <CardMedia
                       component="img"
                       image={category.image_url}
@@ -47,7 +48,7 @@ const CategorySelection = ({ categories, GetSubcategories }) => {
                     </Typography>
                   </Box>
 
-                  {/* New section to the right showing the completed/total quiz count */}
+                  {/* Right side: Section showing completed/total quiz count */}
                   <Box sx={{ width: "25%", display: "flex", flexDirection: "column", justifyContent: "center", padding: 1 }}>
                     {total > 0 && (
                       <Typography variant="body1" color="textSecondary" sx={{ fontWeight: "bold" }}>
