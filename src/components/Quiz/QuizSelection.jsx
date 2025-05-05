@@ -19,26 +19,6 @@ const QuizSelection = ({ startQuiz, quizzes, goBack }) => {
 
   return (
     <div id="quizSelection">
-      <Box sx={{ marginBottom: 2 }}>
-        <Button
-          variant="outlined"
-          onClick={goBack}
-          sx={{
-            margin: "10px",
-            display: "inline-flex",
-            alignItems: "center",
-            color: "primary.main",
-            borderColor: "primary.main",
-            "&:hover": {
-              backgroundColor: "primary.main",
-              color: "white"
-            }
-          }}
-        >
-          Terug
-        </Button>
-      </Box>
-
       {sortedLayers.map(([layerName, layerQuizzes]) => (
         <div key={layerName} className="quiz-layer-group">
           <h3>{layerName}</h3>

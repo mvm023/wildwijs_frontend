@@ -142,13 +142,8 @@ const StudyMode = ({GetCategories, categories, GetSubcategories, setSubcategorie
           <CategorySelection title={"Categorieën"} categories={categories} GetSubcategories={GetSubcategories}/>
         )}
 
-        {!loading && !questions.length && !quizzes.length && subcategories.length > 0 && (
-          <SubcategorySelection title={"Subcategorieën"} subcategories={subcategories} goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories'); localStorage.removeItem('currentSubcategoryId')}} GetQuizzes={GetQuizzes} />
-        )}
-
-
-        {!loading && !questions.length && quizzes.length > 0 && (
-            <QuizSelection startQuiz={startQuiz} quizzes={quizzes} goBack={() => {setQuizzes([]); localStorage.removeItem('quizzes');}} />
+        {!loading && !questions.length && subcategories.length > 0 && (
+          <SubcategorySelection title={"Subcategorieën"} subcategories={subcategories} goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories'); localStorage.removeItem('currentSubcategoryId')}} GetQuizzes={GetQuizzes} startQuiz={startQuiz} />
         )}
 
         {loading && <LoadingSpinner />}
