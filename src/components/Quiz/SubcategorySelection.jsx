@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardActionArea,
@@ -11,8 +11,7 @@ import {
 import QuizSelection from "../Quiz/QuizSelection";
 import AxiosInstance from "../../config/axios";
 
-const SubCategorySelection = ({ title, subcategories, goBack, startQuiz }) => {
-  const [expandedSubcategoryId, setExpandedSubcategoryId] = useState(null);
+const SubCategorySelection = ({ title, subcategories, goBack, startQuiz, expandedSubcategoryId, setExpandedSubcategoryId }) => {
   const [subcategoryQuizzes, setSubcategoryQuizzes] = useState({});
   const [loadingQuizzes, setLoadingQuizzes] = useState({});
 
@@ -29,6 +28,7 @@ const SubCategorySelection = ({ title, subcategories, goBack, startQuiz }) => {
             ...prev,
             [subcategoryId]: res.data
           }));
+          localStorage.setItem('currentSubcategoryId', subcategoryId);
         } catch (error) {
           console.error("Error fetching quizzes:", error);
         }
@@ -36,6 +36,26 @@ const SubCategorySelection = ({ title, subcategories, goBack, startQuiz }) => {
       }
     }
   };
+
+  useEffect(() => {
+    const fetchQuizzesForExpandedSubcategory = async () => {
+      if (expandedSubcategoryId && !subcategoryQuizzes[expandedSubcategoryId]) {
+        setLoadingQuizzes(prev => ({ ...prev, [expandedSubcategoryId]: true }));
+        try {
+          const res = await AxiosInstance.get(`quizzes-by-subcategory/${expandedSubcategoryId}/`);
+          setSubcategoryQuizzes(prev => ({
+            ...prev,
+            [expandedSubcategoryId]: res.data
+          }));
+        } catch (error) {
+          console.error("Error fetching quizzes:", error);
+        }
+        setLoadingQuizzes(prev => ({ ...prev, [expandedSubcategoryId]: false }));
+      }
+    };
+  
+    fetchQuizzesForExpandedSubcategory();
+  }, [expandedSubcategoryId]);
 
   return (
     <div>
@@ -123,7 +143,7 @@ const SubCategorySelection = ({ title, subcategories, goBack, startQuiz }) => {
                 </Card>
 
                 {/* Expandable quiz list */}
-                <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                <Collapse in={isExpanded} timeout="auto" unmountOnExit sx={{backgroundColor: 'white'}}>
                   <Box mt={2}>
                     {loadingQuizzes[subcategory.id] ? (
                       <Typography variant="body2" sx={{ padding: 2 }}>
@@ -145,8 +165,7 @@ const SubCategorySelection = ({ title, subcategories, goBack, startQuiz }) => {
           })}
         </Box>
       </div>
-    </div>
-  );
+    </div>)
 };
 
 export default SubCategorySelection;

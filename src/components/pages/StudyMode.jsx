@@ -36,6 +36,10 @@ const StudyMode = ({GetCategories, categories, GetSubcategories, setSubcategorie
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuizId, setCurrentQuizId] = useState(null);
   const [score, setScore] = useState(0);
+  const [expandedSubcategoryId, setExpandedSubcategoryId] = useState(
+    localStorage.getItem('currentSubcategoryId') || null
+  );
+  
 
   // Fetch Quizzes based on selected layer
   const GetQuizzes = (subcategoryId) => {
@@ -44,7 +48,6 @@ const StudyMode = ({GetCategories, categories, GetSubcategories, setSubcategorie
       .then((res) => {
         setQuizzes(res.data);
         localStorage.setItem('quizzes', JSON.stringify(res.data));
-        localStorage.setItem('currentSubcategoryId', subcategoryId)
         setLoading(false);
       })
       .catch((error) => {
@@ -121,13 +124,10 @@ const StudyMode = ({GetCategories, categories, GetSubcategories, setSubcategorie
   // Load categories on component mount
   useEffect(() => {
     setLoading(true);
-    const savedSubcategories = JSON.parse(localStorage.getItem('subcategories'));
-    if (savedSubcategories) {
-      setSubcategories(savedSubcategories);
-    }
-    const currentSubcategoryId = JSON.parse(localStorage.getItem('currentSubcategoryId'));
-    if (currentSubcategoryId){
-      GetQuizzes(currentSubcategoryId)
+    GetCategories();
+    const currentCategoryId = JSON.parse(localStorage.getItem('currentCategoryId'));
+    if (currentCategoryId) {
+      GetSubcategories(currentCategoryId);
     }
   
     // Clear questions to avoid persistence
@@ -143,7 +143,15 @@ const StudyMode = ({GetCategories, categories, GetSubcategories, setSubcategorie
         )}
 
         {!loading && !questions.length && subcategories.length > 0 && (
-          <SubcategorySelection title={"Subcategorieën"} subcategories={subcategories} goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories'); localStorage.removeItem('currentSubcategoryId')}} GetQuizzes={GetQuizzes} startQuiz={startQuiz} />
+          <SubcategorySelection 
+            title={"Subcategorieën"} 
+            subcategories={subcategories} 
+            goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories'); localStorage.removeItem('currentSubcategoryId'); localStorage.removeItem('expandedSubcategoryId'); setExpandedSubcategoryId(null)}} 
+            GetQuizzes={GetQuizzes} 
+            startQuiz={startQuiz} 
+            expandedSubcategoryId={expandedSubcategoryId}
+            setExpandedSubcategoryId={setExpandedSubcategoryId}
+            setLoading={setLoading}/>
         )}
 
         {loading && <LoadingSpinner />}
