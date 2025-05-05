@@ -82,8 +82,8 @@ function ResponsiveAppBar({ user, setUser }) {
   }, [user])
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
+    <AppBar position="static" elevation={0} style={{backgroundColor: "#395B50"}}>
+      <div className="container">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
@@ -197,7 +197,7 @@ function ResponsiveAppBar({ user, setUser }) {
             )}
           </Box>
         </Toolbar>
-      </Container>
+      </div>
 
       {/* Login Dialog */}
       <Dialog open={showLoginDialog} 

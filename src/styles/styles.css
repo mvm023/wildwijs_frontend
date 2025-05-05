@@ -1,7 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background-color: #ecffe0;
+    background-color: #f5f2ed;
     display: grid;
 }
 
@@ -180,7 +180,7 @@ body {
 /* General container styling */
 .container {
     max-width: 1140px;
-    width: calc(100%-40px);
+    width: calc(100% - 40px);
     margin: 0 auto; /* Center the content */
     padding: 0px 20px; /* Optional: Add padding to the sides */
 }
