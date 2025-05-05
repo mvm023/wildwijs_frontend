@@ -9,7 +9,7 @@ import TopBar from './components/UI/TopBar';
 import Encyclopedia from './components/pages/Encyclopedia';
 import EmailConfirmation from './components/pages/EmailConfirmation';
 import AxiosInstance from './config/axios'
-import theme from './styles/theme';
+import theme from './theme/theme';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -74,7 +74,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <TopBar user={user} setUser={setUser} />
         <Routes>
-          <Route path="/" element={<Home GetCategories={GetCategories} categories={categories} GetSubcategories={GetSubcategories}/>} />
+          <Route path="/" element={<Home categories={categories} GetSubcategories={GetSubcategories} setSubcategories={setSubcategories}/>} />
           <Route path="/StudyMode" element={<StudyMode GetCategories={GetCategories} categories={categories} GetSubcategories={GetSubcategories} setSubcategories={setSubcategories} subcategories={subcategories} loading={loading} setLoading={setLoading}/>} />
           <Route path="/Encyclopedia" element={<Encyclopedia />} />
           <Route path="/activate-account/:uidb64/:token" element={<EmailConfirmation />} />

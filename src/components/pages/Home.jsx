@@ -19,13 +19,13 @@ const Home = ({categories, GetSubcategories}) => {
 
   return (
     <div className='container'>
-      <Grid2 container spacing={2} sx={{ paddingTop: '64px', alignItems: 'center', height: 'calc(100vh - 132px)'}}>
+      <Grid2 container spacing={15} sx={{ paddingTop: '64px', alignItems: 'center', height: 'calc(100vh - 132px)'}}>
         <Grid2 size={{ xs: 12, sm: 6 }}>
           <Typography variant='h2' sx={{ fontWeight: 500, marginBottom: '50px'}}>
             Wordt{' '}
-            <span style={{ fontStyle: 'italic', color: colors.accent }}>wijs</span>{' '}
+            <span style={{ fontStyle: 'italic', color: colors.accent }}>Wijs</span>{' '}
             in het{' '}
-            <span style={{ fontStyle: 'italic', color: colors.accent }}>wild!</span>
+            <span style={{ fontStyle: 'italic', color: colors.accent }}>Wild!</span>
           </Typography>
           <Grid2 container spacing={2}>
             {categories.slice(0,3).map((category) => (
@@ -58,7 +58,9 @@ const Home = ({categories, GetSubcategories}) => {
             </Card>
           </Grid2>
         </Grid2>
-        <Grid2 xs={12} md={6}></Grid2>
+        <Grid2 size={{ xs: 12, sm: 6 }}>
+          <img src="/images/home-hero.jpg" alt="WildWijs hero" style={{ width: '100%', borderRadius: '15px' }} />
+        </Grid2>
       </Grid2>
     </div>
   );

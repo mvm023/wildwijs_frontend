@@ -76,6 +76,7 @@ body {
 
 .quiz-option.locked:hover {
     transform: none; /* Disable hover effect */
+    box-shadow: var(--Paper-shadow);
 }
 
 .score-and-lives {
