@@ -171,11 +171,11 @@ const StudyMode = () => {
     <div>
       <div className="container">
         {!loading && !questions.length && !subcategories.length && categories.length > 0 && (
-          <CategorySelection categories={categories} GetSubcategories={GetSubcategories}/>
+          <CategorySelection title={"Categorieën"} categories={categories} GetSubcategories={GetSubcategories}/>
         )}
 
         {!loading && !questions.length && !quizzes.length && subcategories.length > 0 && (
-          <SubcategorySelection subcategories={subcategories} goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories'); localStorage.removeItem('currentSubcategoryId')}} GetQuizzes={GetQuizzes} />
+          <SubcategorySelection title={"Subcategorieën"} subcategories={subcategories} goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories'); localStorage.removeItem('currentSubcategoryId')}} GetQuizzes={GetQuizzes} />
         )}
 
 

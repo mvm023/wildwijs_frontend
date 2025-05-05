@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import CategorySelection from '../Quiz/CategorySelection'
 
-const SubCategorySelection = ({ subcategories, GetQuizzes, goBack }) => {
+const SubCategorySelection = ({ title, subcategories, GetQuizzes, goBack }) => {
   return (
     <div>
       <Box sx={{ marginBottom: 2 }}>
@@ -31,7 +31,7 @@ const SubCategorySelection = ({ subcategories, GetQuizzes, goBack }) => {
           Terug
         </Button>
       </Box>
-      <CategorySelection categories={subcategories} GetSubcategories={GetQuizzes}/>
+      <CategorySelection title={title} categories={subcategories} GetSubcategories={GetQuizzes}/>
     </div>
   );
 };
