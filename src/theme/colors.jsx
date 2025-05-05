@@ -5,6 +5,7 @@ const colors = {
     accent: '#F58A07',
     text: '#333333',
     background: '#f5f2ed',
+    white: '#ffff'
 };
 
 export default colors;

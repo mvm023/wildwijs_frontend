@@ -29,45 +29,13 @@ const ScoreAndLives = ({ score, totalQuestions }) => {
 };
 
 
-const StudyMode = () => {
-  const [categories, setCategories] = useState([]);
-  const [subcategories, setSubcategories] = useState([]);
+const StudyMode = ({GetCategories, categories, GetSubcategories, setSubcategories, subcategories, loading, setLoading}) => {
   const [quizzes, setQuizzes] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [quizSessionId, setQuizSessionId] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuizId, setCurrentQuizId] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [score, setScore] = useState(0);
-
-  // Fetch Categories from the API
-  const GetCategories = () => {
-    setLoading(true);
-    AxiosInstance.get("categories/")
-      .then((res) => {
-        setCategories(res.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-        setLoading(false);
-      });
-  };
-
-  // Fetch Subcategories based on selected category
-  const GetSubcategories = (categoryId) => {
-    setLoading(true);
-    AxiosInstance.get(`subcategories/${categoryId}/`)
-      .then((res) => {
-        setSubcategories(res.data);
-        localStorage.setItem('subcategories', JSON.stringify(res.data));
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching subcategories:", error);
-        setLoading(false);
-      });
-  };
 
   // Fetch Quizzes based on selected layer
   const GetQuizzes = (subcategoryId) => {
@@ -152,8 +120,7 @@ const StudyMode = () => {
 
   // Load categories on component mount
   useEffect(() => {
-    // Load categories from localStorage if available
-    GetCategories()
+    setLoading(true);
     const savedSubcategories = JSON.parse(localStorage.getItem('subcategories'));
     if (savedSubcategories) {
       setSubcategories(savedSubcategories);
@@ -165,6 +132,7 @@ const StudyMode = () => {
   
     // Clear questions to avoid persistence
     setQuestions([]);
+    setLoading(false);
   }, []);
   
   return (

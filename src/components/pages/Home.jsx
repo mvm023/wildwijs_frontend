@@ -1,33 +1,61 @@
-import React from 'react'
-import { Card, CardContent, Grid2, Typography } from '@mui/material'
+import React, { useEffect } from 'react';
+import { Card, CardActionArea, CardContent, Grid2, Typography } from '@mui/material'
+import { Link, useNavigate } from 'react-router';
 import colors from '../../theme/colors'; 
+import '../../styles/styles.css';
 
-const Home = () => {
+const Home = ({categories, GetSubcategories}) => {
+  const navigate = useNavigate();
+
+  const MoveToCategory = async (category_id) => {
+    try {
+      await GetSubcategories(category_id);
+      navigate('/StudyMode');
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className='container'>
-      <Grid2 container spacing={2} style={{ paddingTop: 64 }}>
-        <Grid2 xs={12} md={6} sx={{ alignItems: 'center'}}>
-          <Typography variant='h2' sx={{ fontWeight: 500}}>
+      <Grid2 container spacing={2} sx={{ paddingTop: '64px', alignItems: 'center', height: 'calc(100vh - 132px)'}}>
+        <Grid2 size={{ xs: 12, sm: 6 }}>
+          <Typography variant='h2' sx={{ fontWeight: 500, marginBottom: '50px'}}>
             Wordt{' '}
             <span style={{ fontStyle: 'italic', color: colors.accent }}>wijs</span>{' '}
             in het{' '}
             <span style={{ fontStyle: 'italic', color: colors.accent }}>wild!</span>
           </Typography>
-          <Grid2 container spacing={2} sx={{ marginTop: 4 }}>
-            {[1, 2, 3].map((item, index) => (
-              <Grid2 xs={12} md={4} key={index}>
-                <Card>
+          <Grid2 container spacing={2}>
+            {categories.slice(0,3).map((category) => (
+            <Grid2 size={{ xs: 12, sm: 4 }} key={category.name}>
+              <Card>
+                <CardActionArea onClick={() => MoveToCategory(category.id)} sx={{
+                    '&:hover .category-text': {
+                      color: colors.accent,
+                    },
+                  }}
+                >
                   <img 
-                    src="https://via.placeholder.com/300x200" 
-                    alt={`Placeholder ${index + 1}`} 
-                    style={{ width: '100%', height: 'auto' }} 
+                    src={category.image_url}
+                    alt={`Placeholder ${category.name}`} 
+                    style={{ width: '100%', height: '120px', objectFit: 'cover' }} 
                   />
-                  <CardContent>
-                    <Typography variant="h6" align="center">Naam {index + 1}</Typography>
+                  <CardContent sx={{height: '50px'}}>
+                    <Typography variant="body" align="center" sx={{ fontWeight: 600}} className="category-text">{category.name}</Typography>
                   </CardContent>
-                </Card>
-              </Grid2>
+                </CardActionArea>
+              </Card>
+            </Grid2>
             ))}
+            <Card sx={{width: '100%'}}>
+              <CardActionArea component={Link} to={`/StudyMode`}>
+                <CardContent>
+                  <Typography variant="body" align="center" sx={{ fontWeight: 600}}>Meer categorieën</Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
           </Grid2>
         </Grid2>
         <Grid2 xs={12} md={6}></Grid2>
