@@ -26,4 +26,16 @@ AxiosInstance.interceptors.request.use(
     }
 )
 
+AxiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        localStorage.removeItem("Token");
+        // Optional: reload page or redirect to login
+        window.location.reload(); // or use navigate('/login') if using react-router-dom
+      }
+      return Promise.reject(error);
+    }
+  );
+
 export default AxiosInstance;

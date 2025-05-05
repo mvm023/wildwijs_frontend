@@ -7,7 +7,7 @@ import StudyMode from './components/pages/StudyMode';
 import TopBar from './components/UI/TopBar';
 import Encyclopedia from './components/pages/Encyclopedia';
 import EmailConfirmation from './components/pages/EmailConfirmation';
-import API_BASE_URL from './config/config'
+import AxiosInstance from './config/axios'
 
 function App() {
   const [user, setUser] = useState(null);
@@ -19,27 +19,18 @@ function App() {
         setUser(null);
         return;
       }
-    
-      try {
-        const response = await fetch(`${API_BASE_URL}/whoami/`, {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
-    
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
-        } else {
-          setUser(null);
-        }
-      } catch (err) {
-        console.error("Failed to fetch user:", err);
-        setUser(null);
-      }
-    };
 
-    fetchUser();
+      AxiosInstance.get(`whoami/`)
+        .then((res) => {
+          setUser(res.data);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch user:", error);
+          setUser(null);
+        });
+  }
+
+  fetchUser();
   }, []);
 
   return (
