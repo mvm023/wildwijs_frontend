@@ -59,7 +59,7 @@ const Home = ({categories, GetSubcategories}) => {
           </Grid2>
         </Grid2>
         <Grid2 size={{ xs: 12, sm: 6 }}>
-          <img src="/images/home-hero.jpg" alt="WildWijs hero" style={{ width: '100%', borderRadius: '15px' }} />
+          <img src="/images/home-hero.png" alt="WildWijs hero" style={{ width: '100%', borderRadius: '15px' }} />
         </Grid2>
       </Grid2>
     </div>

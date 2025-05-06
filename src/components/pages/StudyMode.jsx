@@ -146,7 +146,7 @@ const StudyMode = ({GetCategories, categories, GetSubcategories, setSubcategorie
           <SubcategorySelection 
             title={"Subcategorieën"} 
             subcategories={subcategories} 
-            goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories'); localStorage.removeItem('currentSubcategoryId'); localStorage.removeItem('expandedSubcategoryId'); setExpandedSubcategoryId(null)}} 
+            goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories'); localStorage.removeItem('currentCategoryId'); localStorage.removeItem('currentSubcategoryId'); localStorage.removeItem('expandedSubcategoryId'); setExpandedSubcategoryId(null)}} 
             GetQuizzes={GetQuizzes} 
             startQuiz={startQuiz} 
             expandedSubcategoryId={expandedSubcategoryId}
