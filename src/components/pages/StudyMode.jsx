@@ -29,45 +29,17 @@ const ScoreAndLives = ({ score, totalQuestions }) => {
 };
 
 
-const StudyMode = () => {
-  const [categories, setCategories] = useState([]);
-  const [subcategories, setSubcategories] = useState([]);
+const StudyMode = ({GetCategories, categories, GetSubcategories, setSubcategories, subcategories, loading, setLoading}) => {
   const [quizzes, setQuizzes] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [quizSessionId, setQuizSessionId] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuizId, setCurrentQuizId] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [score, setScore] = useState(0);
-
-  // Fetch Categories from the API
-  const GetCategories = () => {
-    setLoading(true);
-    AxiosInstance.get("categories/")
-      .then((res) => {
-        setCategories(res.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-        setLoading(false);
-      });
-  };
-
-  // Fetch Subcategories based on selected category
-  const GetSubcategories = (categoryId) => {
-    setLoading(true);
-    AxiosInstance.get(`subcategories/${categoryId}/`)
-      .then((res) => {
-        setSubcategories(res.data);
-        localStorage.setItem('subcategories', JSON.stringify(res.data));
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching subcategories:", error);
-        setLoading(false);
-      });
-  };
+  const [expandedSubcategoryId, setExpandedSubcategoryId] = useState(
+    localStorage.getItem('currentSubcategoryId') || null
+  );
+  
 
   // Fetch Quizzes based on selected layer
   const GetQuizzes = (subcategoryId) => {
@@ -76,7 +48,6 @@ const StudyMode = () => {
       .then((res) => {
         setQuizzes(res.data);
         localStorage.setItem('quizzes', JSON.stringify(res.data));
-        localStorage.setItem('currentSubcategoryId', subcategoryId)
         setLoading(false);
       })
       .catch((error) => {
@@ -152,35 +123,35 @@ const StudyMode = () => {
 
   // Load categories on component mount
   useEffect(() => {
-    // Load categories from localStorage if available
-    GetCategories()
-    const savedSubcategories = JSON.parse(localStorage.getItem('subcategories'));
-    if (savedSubcategories) {
-      setSubcategories(savedSubcategories);
-    }
-    const currentSubcategoryId = JSON.parse(localStorage.getItem('currentSubcategoryId'));
-    if (currentSubcategoryId){
-      GetQuizzes(currentSubcategoryId)
+    setLoading(true);
+    GetCategories();
+    const currentCategoryId = JSON.parse(localStorage.getItem('currentCategoryId'));
+    if (currentCategoryId) {
+      GetSubcategories(currentCategoryId);
     }
   
     // Clear questions to avoid persistence
     setQuestions([]);
+    setLoading(false);
   }, []);
   
   return (
     <div>
       <div className="container">
         {!loading && !questions.length && !subcategories.length && categories.length > 0 && (
-          <CategorySelection categories={categories} GetSubcategories={GetSubcategories}/>
+          <CategorySelection title={"Categorieën"} categories={categories} GetSubcategories={GetSubcategories}/>
         )}
 
-        {!loading && !questions.length && !quizzes.length && subcategories.length > 0 && (
-          <SubcategorySelection subcategories={subcategories} goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories'); localStorage.removeItem('currentSubcategoryId')}} GetQuizzes={GetQuizzes} />
-        )}
-
-
-        {!loading && !questions.length && quizzes.length > 0 && (
-            <QuizSelection startQuiz={startQuiz} quizzes={quizzes} goBack={() => {setQuizzes([]); localStorage.removeItem('quizzes');}} />
+        {!loading && !questions.length && subcategories.length > 0 && (
+          <SubcategorySelection 
+            title={"Subcategorieën"} 
+            subcategories={subcategories} 
+            goBack={() => {setSubcategories([]); localStorage.removeItem('subcategories'); localStorage.removeItem('currentCategoryId'); localStorage.removeItem('currentSubcategoryId'); localStorage.removeItem('expandedSubcategoryId'); setExpandedSubcategoryId(null)}} 
+            GetQuizzes={GetQuizzes} 
+            startQuiz={startQuiz} 
+            expandedSubcategoryId={expandedSubcategoryId}
+            setExpandedSubcategoryId={setExpandedSubcategoryId}
+            setLoading={setLoading}/>
         )}
 
         {loading && <LoadingSpinner />}

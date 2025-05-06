@@ -1,7 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background-color: #ecffe0;
+    background-color: #f5f2ed;
     display: grid;
 }
 
@@ -61,15 +61,6 @@ body {
     transition: transform 0.2s ease-in-out;
 }
 
-.quiz-option img {
-    width: 150px; /* Adjust this to your preferred size */
-    height: 110px; /* Ensures all images are the same height */
-    object-fit: cover; /* Ensures images fill the space without distortion */
-    border-radius: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
 .quiz-option.locked img {
     filter: grayscale(100%); /* Apply grayscale and darken image for locked quizzes */
     pointer-events: none; /* Prevent interaction with image if locked */
@@ -85,6 +76,7 @@ body {
 
 .quiz-option.locked:hover {
     transform: none; /* Disable hover effect */
+    box-shadow: var(--Paper-shadow);
 }
 
 .score-and-lives {
@@ -180,7 +172,7 @@ body {
 /* General container styling */
 .container {
     max-width: 1140px;
-    width: calc(100%-40px);
+    width: calc(100% - 40px);
     margin: 0 auto; /* Center the content */
     padding: 0px 20px; /* Optional: Add padding to the sides */
 }
@@ -192,7 +184,6 @@ body {
     font-size: 24px;
     color: #333;
 }
-
 
 @media (max-width: 768px) {
     .score-and-lives {

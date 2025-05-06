@@ -7,9 +7,12 @@ import {
   Box
 } from "@mui/material";
 
-const CategorySelection = ({ categories, GetSubcategories }) => {
+const CategorySelection = ({ title, categories, GetSubcategories }) => {
   return (
     <div style={{ marginTop: 20 }}>
+      <Typography variant="h3">
+        {title}
+      </Typography>
       <Box display="flex" flexDirection="column" alignItems="center" gap={2} mt={2}>
         {categories.map((category) => {
           const { completed, total } = category.completion_progress || {};
@@ -17,7 +20,7 @@ const CategorySelection = ({ categories, GetSubcategories }) => {
           return (
             <Card key={category.id} sx={{ width: "100%" }}>
               <CardActionArea onClick={() => GetSubcategories(category.id)}>
-                <Box sx={{ display: "flex", height: 200, width: "100%" }}>
+                <Box sx={{ display: "flex", height: 160, width: "100%" }}>
                   {/* Left side: CardMedia and Typography centered within 75% */}
                   <Box sx={{ width: "75%", position: "relative" }}>
                     <CardMedia

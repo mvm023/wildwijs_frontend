@@ -18,8 +18,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import CloseIcon from '@mui/icons-material/Close';
-import API_BASE_URL from '../../config/config';
 import AxiosInstance from '../../config/axios';
+import colors from '../../theme/colors';
 
 
 
@@ -82,8 +82,8 @@ function ResponsiveAppBar({ user, setUser }) {
   }, [user])
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
+    <AppBar position="static" elevation={0} style={{backgroundColor: colors.primary}}>
+      <div className="container">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
@@ -197,7 +197,7 @@ function ResponsiveAppBar({ user, setUser }) {
             )}
           </Box>
         </Toolbar>
-      </Container>
+      </div>
 
       {/* Login Dialog */}
       <Dialog open={showLoginDialog} 
