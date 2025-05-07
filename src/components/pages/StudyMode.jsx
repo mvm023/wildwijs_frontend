@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/styles.css";
 import Quiz from '../Quiz/Quiz';
-import QuizSelection from '../Quiz/QuizSelection';
 import AxiosInstance from "../../config/axios";
 import SubcategorySelection from "../Quiz/SubcategorySelection";
 import CategorySelection from "../Quiz/CategorySelection";

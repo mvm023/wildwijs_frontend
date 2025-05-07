@@ -6,7 +6,7 @@ import Home from './components/pages/Home';
 import QuizMode from './components/pages/QuizMode';
 import StudyMode from './components/pages/StudyMode';
 import TopBar from './components/UI/TopBar';
-import Admin from './components/pages/Admin';
+import AdminDashboard from './components/pages/AdminDashboard';
 import Encyclopedia from './components/pages/Encyclopedia';
 import EmailConfirmation from './components/pages/EmailConfirmation';
 import AxiosInstance from './config/axios';
@@ -49,7 +49,7 @@ function App() {
   };
 
   useEffect(() => {
-    const fetchUser = () => {
+    const fetchUser = async () => {
       const token = localStorage.getItem("Token");
       if (!token) {
         setUser(null);
@@ -57,7 +57,7 @@ function App() {
         return;
       }
 
-      AxiosInstance.get(`whoami/`)
+      await AxiosInstance.get(`whoami/`)
         .then((res) => {
           setUser(res.data);
         })
@@ -85,7 +85,7 @@ function App() {
         ) : (
           <Routes>
             <Route path="/" element={<Home categories={categories} GetSubcategories={GetSubcategories} setSubcategories={setSubcategories}/>} />
-            <Route path="/admin" element={<Admin user={user} userLoading={userLoading}/>} />
+            <Route path="/admin" element={<AdminDashboard user={user} userLoading={userLoading}/>} />
             <Route path="/StudyMode" element={<StudyMode GetCategories={GetCategories} categories={categories} GetSubcategories={GetSubcategories} setSubcategories={setSubcategories} subcategories={subcategories} loading={loading} setLoading={setLoading}/>} />
             <Route path="/Encyclopedia" element={<Encyclopedia />} />
             <Route path="/activate-account/:uidb64/:token" element={<EmailConfirmation />} />
