@@ -22,6 +22,8 @@ mkcert localhost
 
 ## Building locally
 
-To build the frontend locally, run the following command in the program directory
+To build the frontend locally, run the following command in the program directory:
 
 npm run dev
+
+- The backend should now be running on https://127.0.0.1:5173.
