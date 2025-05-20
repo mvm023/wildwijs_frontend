@@ -1,11 +1,27 @@
 # Wildwijs frontend
 
-This is the frontend for wildwijs, a Duolingo-style quiz app about Dutch nature, built with React.
+This is the frontend for wildwijs, a Duolingo-style quiz app about Dutch nature, built with React and Vite.
 
-To get started, create a .env file with the relevant values (the VITE_API_BASE_URL_DEPLOY can be left empty when using the application only locally), a .env.example file is present for reference. 
-Moreover, a localhost-key.pem and a localhost.pem will have to be provided.
+## Getting started
+
+To get started, clone the directory, and run the following commands in the program directory:
+
+#### 1. Install dependencies
+
+npm install
+
+#### 2. Create environment file
+
+cp .env.example .env
+
+#### 3. Generate HTTPS certificates for localhost
+
+mkcert -install\
+mkcert localhost
 
 
-To build locally, run the following command in your project directory:
+## Building locally
+
+To build the frontend locally, run the following command in the program directory
 
 npm run dev
