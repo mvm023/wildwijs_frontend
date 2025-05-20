@@ -26,4 +26,4 @@ To build the frontend locally, run the following command in the program director
 
 npm run dev
 
-- The frontend should now be running on https://127.0.0.1:5173.
+- The frontend should now be running on https://localhost:5173/.
