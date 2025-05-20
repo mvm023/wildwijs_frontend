@@ -1,12 +1,11 @@
-# React + Vite
+# Wildwijs frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend for wildwijs, a Duolingo-style quiz app about Dutch nature.
 
-Currently, two official plugins are available:
+To get started, create a .env file with the relevant values (the VITE_API_BASE_URL_DEPLOY can be left empty when using the application only locally), a .env.example file is present for reference. 
+Moreover, a localhost-key.pem and a localhost.pem will have to be provided.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+To build locally, run the following command in your project directory:
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+npm run dev
